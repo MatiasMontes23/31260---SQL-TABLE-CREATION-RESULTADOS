@@ -1,0 +1,112 @@
+Create DATABASE RESULTADOS;
+USE RESULTADOS;
+Create table RESULTADOS.REGIONES (
+          ID_REGION INT not null auto_increment
+		, RegName varchar(25) NOT NULL
+        , Primary key (ID_REGION)
+) ;
+Create table RESULTADOS.EQUIPOS (
+          ID_TEAM INT not null auto_increment
+        , TeamName   varchar(25) NOT NULL
+        , ID_REGION INT not null
+        , Primary key (ID_TEAM)
+) ;
+Create table RESULTADOS.COMPETICIONES (
+		  ID_COMPETITION INT not null auto_increment
+		, CompetitionName varchar(25) NOT NULL
+        , ID_REGION INT not null
+        , Primary key (ID_COMPETITION)
+) ;
+Create table RESULTADOS.TEMPORADA (
+          ID_SEASON INT not null auto_increment
+		, SeasonName varchar(25) NOT NULL
+		, TempBegDate DATE NOT NULL
+		, TempEndDate DATE NOT NULL
+        , primary key (ID_SEASON)
+) ;
+Create table RESULTADOS.ESTADIOS (
+          ID_Stadium INT NOT NULL auto_increment
+        , StadiumNam VARCHAR(25) NOT NULL 
+        , ID_REGION INT NOT NULL
+        , ID_Propietario INT
+        , Primary key (ID_Stadium)
+) ;
+Create table RESULTADOS.PERSONA (
+           ID_Person INT NOT NULL auto_increment
+		 , PersonName Varchar(25) NOT NULL
+         , PersonSurname Varchar(25) NOT NULL
+         , ID_Country INT NOT NULL
+         , Birthday DATE
+         , Primary key (ID_Person)
+) ;
+Create table RESULTADOS.ROLES (
+           ID_Rol INT NOT NULL auto_increment
+		 , RolName Varchar(10) NOT NULL
+         , primary key (ID_Rol)
+) ;
+Create table RESULTADOS.ROLPERSONA (
+           ID_Person INT NOT NULL
+         , ID_Rol INT NOT NULL
+		 , foreign key (ID_Person) references RESULTADOS.PERSONA (ID_Person)
+         , foreign key (ID_Rol) references RESULTADOS.ROLES (ID_Rol)
+) ;
+Create table RESULTADOS.JUGADOR (
+           ID_Player Int NOT NULL
+         , PlyBegTime INT NOT NULL 
+         , PlyEndTime INT
+         , foreign key (ID_Player) references RESULTADOS.PERSONA (ID_Person)
+) ;
+Create table RESULTADOS.ENTRENADOR (
+          ID_Coach Int NOT NULL
+         , CoaBegTime INT NOT NULL 
+         , CoaEndTime INT
+         , foreign key (ID_Coach) references RESULTADOS.PERSONA (ID_Person)
+) ;
+Create table RESULTADOS.ARBITRO (
+           ID_Referee Int NOT NULL
+         , RefBegTime INT NOT NULL 
+         , RefEndTime INT 
+         , foreign key (ID_Referee) references RESULTADOS.PERSONA (ID_Person)
+) ;
+Create table RESULTADOS.JUGADOREQUIPO (
+           ID_Player Int NOT NULL
+		 , ID_Team INT NOT NULL
+         , PyBegTemp INT NOT NULL 
+         , PyEndTemp INT
+         , foreign key (ID_Player) references RESULTADOS.JUGADOR (ID_Player) 
+         , foreign key (ID_team) references RESULTADOS.EQUIPOS (ID_team)
+         , foreign key (PyBegTemp) references RESULTADOS.TEMPORADA (ID_Season)
+) ;
+Create table RESULTADOS.ENTRENADOREQUIPO (
+  ID_Coach Int NOT NULL
+		 , ID_Team INT NOT NULL
+         , CoBegTemp INT NOT NULL 
+         , CoEndTemp INT
+         , foreign key (ID_Coach) references RESULTADOS.ENTRENADOR (ID_Coach) 
+         , foreign key (ID_team) references RESULTADOS.EQUIPOS (ID_team)
+         , foreign key (CoBegTemp) references RESULTADOS.TEMPORADA (ID_Season)
+) ;
+Create table RESULTADOS.PARTIDO ( 
+           ID_MATCH INT NOT NULL auto_increment
+		 , ID_TeamH INT NOT NULL
+         , ID_TeamA INT NOT NULL
+		 , ID_Competition INT NOT NULL
+         , ID_Season INT NOT NULL
+		 , ID_Stadium INT NOT NULL
+		 , ID_Referee INT NOT NULL
+		 , FechaPartido DATE
+         , primary key (ID_MATCH)  
+) ;
+Create table RESULTADOS.EVENTOS (
+           ID_Player INT NOT NULL 
+		 , ID_MATCH INT NOT NULL
+         , EventTime INT
+         , ID_Team INT NOT NULL
+         , IS_Goal Boolean 
+         , IS_Owngoal Boolean
+         , Is_YCard Boolean
+         , Is_RCard Boolean
+		 , Primary key (EventTime)
+         , foreign Key (ID_Player) references RESULTADOS.JUGADOR (ID_Player)
+         , Foreign Key (ID_MATCH) references RESULTADOS.PARTIDO (ID_MATCH)
+) ;
